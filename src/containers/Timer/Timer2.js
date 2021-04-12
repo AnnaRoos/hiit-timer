@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-
 import Rounds from '../../components/Rounds/Rounds';
 import Counter from '../../components/Counter/Counter';
+/* import CounterRAF from '../../components/Counter/CounterRAF';
+import CounterPT from '../../hooks/usePreciseTimer/usePreciseTimer';
+import CounterULE from '../../components/Counter/CounteULE';
+import CounterDT from '../../components/Counter/CounterDT'; */
 
 import { calculateTotalTime } from '../../utils/CalculateTotalTime';
-import { calculateSwitchTime } from '../../utils/CalculateSwitchTime';
 
 const Timer2 = (props) => {
   const { state } = props.location;
@@ -15,68 +17,53 @@ const Timer2 = (props) => {
   const breakMinutes = +state.breakMinutes;
   const breakSeconds = +state.breakSeconds;
 
+  const totalMinutes = +intervalMinutes + +breakMinutes;
+  const totalSeconds = +intervalSeconds + +breakSeconds;
+
   const [rounds, setRounds] = useState(state.rounds);
 
-  const totalTime = calculateTotalTime(
-    +intervalMinutes + +breakMinutes,
-    +intervalSeconds + +breakSeconds,
-    rounds
-  );
-
-  const [counterMinutes, setCounterMinutes] = useState(totalTime.minutes);
-  const [counterSeconds, setCounterSeconds] = useState(totalTime.seconds);
+  const [counterMinutes, setCounterMinutes] = useState(0);
+  const [counterSeconds, setCounterSeconds] = useState(0);
 
   const [isRunning, setIsRunning] = useState(false);
+  const [hasBeenPaused, setHasBeenPaused] = useState(false);
   const [onInterval, setOnInterval] = useState(true);
-  const [isFinished, setIsFinished] = useState(false);
 
-  const switchTime = calculateSwitchTime(
-    totalTime.minutes,
-    totalTime.seconds,
-    intervalMinutes,
-    intervalSeconds
-  );
-  const [switchMinutes, setSwitchMinutes] = useState(switchTime.minutes);
-  const [switchSeconds, setSwitchSeconds] = useState(switchTime.seconds);
+  const time = calculateTotalTime(totalMinutes, totalSeconds, rounds);
+
+  const startTimer = () => {
+    if (!hasBeenPaused) {
+      setCounterMinutes(intervalMinutes);
+      setCounterSeconds(intervalSeconds);
+    }
+    setIsRunning(true);
+  };
+
+  const pauseTimer = () => {
+    setIsRunning(false);
+    setHasBeenPaused(true);
+  };
 
   useEffect(() => {
     if (isRunning && rounds > 0) {
       let myInterval = setInterval(() => {
-        if (
-          counterMinutes === switchMinutes &&
-          counterSeconds === switchSeconds
-        ) {
-          if (onInterval) {
-            const newSwitchTime = calculateSwitchTime(
-              counterMinutes,
-              counterSeconds,
-              breakMinutes,
-              breakSeconds
-            );
-            console.log(newSwitchTime);
-            setSwitchMinutes(newSwitchTime.minutes);
-            setSwitchSeconds(newSwitchTime.seconds);
-            setOnInterval(false);
-          } else {
-            const newSwitchTime = calculateSwitchTime(
-              counterMinutes,
-              counterSeconds,
-              intervalMinutes,
-              intervalSeconds
-            );
-            console.log(newSwitchTime);
-            setSwitchMinutes(newSwitchTime.minutes);
-            setSwitchSeconds(newSwitchTime.seconds);
-            setRounds(rounds - 1);
-            setOnInterval(true);
-          }
-        }
         if (counterSeconds > 0) {
           setCounterSeconds(counterSeconds - 1);
         }
         if (counterSeconds === 0) {
           if (counterMinutes === 0) {
-            setIsFinished(true);
+            if (!onInterval) {
+              setRounds(rounds - 1);
+              setOnInterval(true);
+              if (rounds > 1) {
+                setCounterMinutes(intervalMinutes);
+                setCounterSeconds(intervalSeconds);
+              }
+            } else {
+              setCounterMinutes(breakMinutes);
+              setCounterSeconds(breakSeconds);
+              setOnInterval(false);
+            }
             clearInterval(myInterval);
           } else {
             setCounterMinutes(counterMinutes - 1);
@@ -89,55 +76,38 @@ const Timer2 = (props) => {
       };
     }
   }, [
+    isRunning,
     counterMinutes,
     counterSeconds,
-    isRunning,
-    onInterval,
     rounds,
-    switchSeconds,
-    switchMinutes,
     breakMinutes,
     breakSeconds,
     intervalMinutes,
     intervalSeconds,
+    onInterval,
   ]);
 
   return (
     <div>
-      <div>
-        {!isFinished ? (
-          <h2>
-            {onInterval ? (
-              <Counter
-                initialMinutes={intervalMinutes}
-                initialSeconds={intervalSeconds}
-                start={isRunning}
-              >
-                Interval Time:{' '}
-              </Counter>
-            ) : null}
-            {!onInterval ? (
-              <Counter
-                initialMinutes={breakMinutes}
-                initialSeconds={breakSeconds}
-                start={isRunning}
-              >
-                Break Time:{' '}
-              </Counter>
-            ) : null}
-          </h2>
-        ) : (
-          <h2>Done!</h2>
-        )}
-      </div>
-      <Rounds rounds={rounds} />
       <h2>
-        Total Time Left: {counterMinutes}:
+        {onInterval ? 'Interval Time:' : 'Break Time'} {counterMinutes}:
         {counterSeconds < 10 ? '0' + counterSeconds : counterSeconds}
       </h2>
-      <button onClick={() => setIsRunning(true)}>Start</button>
+      <Rounds rounds={rounds} />
+      <Counter
+        initialMinutes={time.minutes}
+        initialSeconds={time.seconds}
+        start={isRunning}
+      >
+        Total Time Left:
+      </Counter>
+      {/*        <CounterRAF seconds={totalSeconds} isRunning={isRunning} /> */}
+      {/*       <CounterPT isRunning={isRunning} /> */}
+      {/*       <CounterULE isRunning={isRunning} /> */}
+      {/*       <CounterDT isRunning={isRunning}/> */}
+      <button onClick={startTimer}>Start</button>
       <br /> <br />
-      <button onClick={() => setIsRunning(false)}>Pause</button>
+      <button onClick={pauseTimer}>Pause</button>
       <br /> <br />
       <button onClick={() => props.history.goBack()}>Go back</button>
     </div>
@@ -145,3 +115,5 @@ const Timer2 = (props) => {
 };
 
 export default Timer2;
+
+

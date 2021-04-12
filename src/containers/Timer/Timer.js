@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
+
 import Rounds from '../../components/Rounds/Rounds';
 import Counter from '../../components/Counter/Counter';
-import CounterRAF from '../../components/Counter/CounterRAF';
-import CounterPT from '../../hooks/usePreciseTimer/usePreciseTimer';
-import CounterULE from '../../components/Counter/CounteULE';
+
 import { calculateTotalTime } from '../../utils/CalculateTotalTime';
-import CounterDT from '../../components/Counter/CounterDT';
+import { calculateSwitchTime } from '../../utils/CalculateSwitchTime';
 
 const Timer = (props) => {
   const { state } = props.location;
@@ -16,53 +15,67 @@ const Timer = (props) => {
   const breakMinutes = +state.breakMinutes;
   const breakSeconds = +state.breakSeconds;
 
-  const totalMinutes = +intervalMinutes + +breakMinutes;
-  const totalSeconds = +intervalSeconds + +breakSeconds;
-
   const [rounds, setRounds] = useState(state.rounds);
 
-  const [counterMinutes, setCounterMinutes] = useState(0);
-  const [counterSeconds, setCounterSeconds] = useState(0);
+  const totalTime = calculateTotalTime(
+    +intervalMinutes + +breakMinutes,
+    +intervalSeconds + +breakSeconds,
+    rounds
+  );
+
+  const [counterMinutes, setCounterMinutes] = useState(totalTime.minutes);
+  const [counterSeconds, setCounterSeconds] = useState(totalTime.seconds);
 
   const [isRunning, setIsRunning] = useState(false);
-  const [hasBeenPaused, setHasBeenPaused] = useState(false);
   const [onInterval, setOnInterval] = useState(true);
+  const [isFinished, setIsFinished] = useState(false);
 
-  const time = calculateTotalTime(totalMinutes, totalSeconds, rounds);
-
-  const startTimer = () => {
-    if (!hasBeenPaused) {
-      setCounterMinutes(intervalMinutes);
-      setCounterSeconds(intervalSeconds);
-    }
-    setIsRunning(true);
-  };
-
-  const pauseTimer = () => {
-    setIsRunning(false);
-    setHasBeenPaused(true);
-  };
+  const switchTime = calculateSwitchTime(
+    totalTime.minutes,
+    totalTime.seconds,
+    intervalMinutes,
+    intervalSeconds
+  );
+  const [switchMinutes, setSwitchMinutes] = useState(switchTime.minutes);
+  const [switchSeconds, setSwitchSeconds] = useState(switchTime.seconds + 1);
 
   useEffect(() => {
     if (isRunning && rounds > 0) {
       let myInterval = setInterval(() => {
+        if (
+          counterMinutes === switchMinutes &&
+          counterSeconds === switchSeconds
+        ) {
+          if (onInterval) {
+            const newSwitchTime = calculateSwitchTime(
+              counterMinutes,
+              counterSeconds,
+              breakMinutes,
+              breakSeconds
+            );
+            setSwitchMinutes(newSwitchTime.minutes);
+            setSwitchSeconds(newSwitchTime.seconds);
+            setOnInterval(false);
+          } else if (!onInterval && rounds > 1) {
+            const newSwitchTime = calculateSwitchTime(
+              counterMinutes,
+              counterSeconds,
+              intervalMinutes,
+              intervalSeconds
+            );
+            setSwitchMinutes(newSwitchTime.minutes);
+            setSwitchSeconds(newSwitchTime.seconds);
+            setRounds(rounds - 1);
+            setOnInterval(true);
+          }
+        }
         if (counterSeconds > 0) {
           setCounterSeconds(counterSeconds - 1);
         }
         if (counterSeconds === 0) {
           if (counterMinutes === 0) {
-            if (!onInterval) {
-              setRounds(rounds - 1);
-              setOnInterval(true);
-              if (rounds > 1) {
-                setCounterMinutes(intervalMinutes);
-                setCounterSeconds(intervalSeconds);
-              }
-            } else {
-              setCounterMinutes(breakMinutes);
-              setCounterSeconds(breakSeconds);
-              setOnInterval(false);
-            }
+            setRounds(rounds - 1);
+            setIsFinished(true);
             clearInterval(myInterval);
           } else {
             setCounterMinutes(counterMinutes - 1);
@@ -75,34 +88,56 @@ const Timer = (props) => {
       };
     }
   }, [
-    isRunning,
     counterMinutes,
     counterSeconds,
+    isRunning,
+    onInterval,
     rounds,
+    switchSeconds,
+    switchMinutes,
     breakMinutes,
     breakSeconds,
     intervalMinutes,
     intervalSeconds,
-    onInterval,
+    isFinished,
   ]);
 
   return (
     <div>
+      <div>
+        {!isFinished ? (
+          <h2>
+            {onInterval ? (
+              <Counter
+                initialMinutes={intervalMinutes}
+                initialSeconds={intervalSeconds}
+                start={isRunning}
+              >
+                Interval Time:{' '}
+              </Counter>
+            ) : null}
+            {!onInterval ? (
+              <Counter
+                initialMinutes={breakMinutes}
+                initialSeconds={breakSeconds}
+                start={isRunning}
+              >
+                Break Time:{' '}
+              </Counter>
+            ) : null}
+          </h2>
+        ) : (
+          <h2>Done!</h2>
+        )}
+      </div>
+      <Rounds rounds={rounds} />
       <h2>
-        {onInterval ? 'Interval Time:' : 'Break Time'} {counterMinutes}:
+        Total Time Left: {counterMinutes}:
         {counterSeconds < 10 ? '0' + counterSeconds : counterSeconds}
       </h2>
-      <Rounds rounds={rounds} />
-      <Counter initialMinutes={time.minutes} initialSeconds={time.seconds} start={isRunning}>
-        Total Time Left:
-      </Counter>
-{/*        <CounterRAF seconds={totalSeconds} isRunning={isRunning} /> */}
-      {/*       <CounterPT isRunning={isRunning} /> */}
-{/*       <CounterULE isRunning={isRunning} /> */}
-      {/*       <CounterDT isRunning={isRunning}/> */} 
-      <button onClick={startTimer}>Start</button>
+      <button onClick={() => setIsRunning(true)}>Start</button>
       <br /> <br />
-      <button onClick={pauseTimer}>Pause</button>
+      <button onClick={() => setIsRunning(false)}>Pause</button>
       <br /> <br />
       <button onClick={() => props.history.goBack()}>Go back</button>
     </div>
