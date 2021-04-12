@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Rounds from '../../components/Rounds/Rounds';
 import Counter from '../../components/Counter/Counter';
+import CounterRAF from '../../components/Counter/CounterRAF';
+import CounterPT from '../../hooks/usePreciseTimer/usePreciseTimer';
+import CounterULE from '../../components/Counter/CounteULE';
 import { calculateTotalTime } from '../../utils/CalculateTotalTime';
+import CounterDT from '../../components/Counter/CounterDT';
 
 const Timer = (props) => {
   const { state } = props.location;
@@ -92,6 +96,10 @@ const Timer = (props) => {
       <Counter initialMinutes={time.minutes} initialSeconds={time.seconds} start={isRunning}>
         Total Time Left:
       </Counter>
+{/*        <CounterRAF seconds={totalSeconds} isRunning={isRunning} /> */}
+      {/*       <CounterPT isRunning={isRunning} /> */}
+{/*       <CounterULE isRunning={isRunning} /> */}
+      {/*       <CounterDT isRunning={isRunning}/> */} 
       <button onClick={startTimer}>Start</button>
       <br /> <br />
       <button onClick={pauseTimer}>Pause</button>
