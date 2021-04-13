@@ -1,113 +1,100 @@
 import React, { useState, useEffect } from 'react';
 import Rounds from '../../components/Rounds/Rounds';
-import Counter from '../../components/Counter/Counter';
-/* import CounterRAF from '../../components/Counter/CounterRAF';
-import CounterPT from '../../hooks/usePreciseTimer/usePreciseTimer';
-import CounterULE from '../../components/Counter/CounteULE';
-import CounterDT from '../../components/Counter/CounterDT'; */
-
-import { calculateTotalTime } from '../../utils/CalculateTotalTime';
+import { msToTime } from '../../utils/MillisecondsToTime';
+import { timeToMilliseconds } from '../../utils/TimeToMilliseconds';
 
 const Timer2 = (props) => {
   const { state } = props.location;
 
-  const intervalMinutes = +state.intervalMinutes;
-  const intervalSeconds = +state.intervalSeconds;
+  const intervalTimeInMilliseconds = timeToMilliseconds(
+    +state.intervalMinutes,
+    +state.intervalSeconds
+  );
 
-  const breakMinutes = +state.breakMinutes;
-  const breakSeconds = +state.breakSeconds;
+  const breakTimeInMilliseconds = timeToMilliseconds(
+    +state.breakMinutes,
+    +state.intervalSeconds
+  );
 
-  const totalMinutes = +intervalMinutes + +breakMinutes;
-  const totalSeconds = +intervalSeconds + +breakSeconds;
+  const totalTimeInMilliseconds = timeToMilliseconds(
+    state.totalTime.minutes,
+    state.totalTime.seconds
+  );
+
+  const [timeInMilliseconds, setTimeInMilliseconds] = useState(
+    totalTimeInMilliseconds
+  );
+
+  const [intervalMinutes, setIntervalMinues] = useState(+state.intervalMinutes);
+  const [intervalSeconds, setIntervalSeconds] = useState(
+    +state.intervalSeconds
+  );
+
+  const [breakMinutes, setBreakMinutes] = useState(+state.breakMinutes);
+  const [breakSeconds, setBreakSeconds] = useState(+state.breakSeconds);
+
+  const totalTime = state.totalTime;
 
   const [rounds, setRounds] = useState(state.rounds);
 
-  const [counterMinutes, setCounterMinutes] = useState(0);
-  const [counterSeconds, setCounterSeconds] = useState(0);
+  const [counter, setCounter] = useState({
+    minutes: +totalTime.minutes,
+    seconds: +totalTime.seconds,
+  });
 
   const [isRunning, setIsRunning] = useState(false);
-  const [hasBeenPaused, setHasBeenPaused] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [onInterval, setOnInterval] = useState(true);
+  const [isFinished, setIsFinished] = useState(false);
 
-  const time = calculateTotalTime(totalMinutes, totalSeconds, rounds);
+  
+ 
 
-  const startTimer = () => {
-    if (!hasBeenPaused) {
-      setCounterMinutes(intervalMinutes);
-      setCounterSeconds(intervalSeconds);
-    }
-    setIsRunning(true);
-  };
-
-  const pauseTimer = () => {
+  const pause = () => {
     setIsRunning(false);
-    setHasBeenPaused(true);
+    setIsPaused(true);
   };
+
+  const start = () => {
+    let startTime = Date.now() + timeInMilliseconds;
+    setSavedTime(startTime);
+    setIsRunning(true);
+  }
+   const [savedTime, setSavedTime] = useState(null);
 
   useEffect(() => {
-    if (isRunning && rounds > 0) {
-      let myInterval = setInterval(() => {
-        if (counterSeconds > 0) {
-          setCounterSeconds(counterSeconds - 1);
+    let myInterval;
+    if (isRunning) {
+      myInterval = setInterval(() => {
+        const now = Date.now();
+        let distance = savedTime - now;
+        setTimeInMilliseconds(distance);
+
+        const newTime = msToTime(distance);
+        setCounter({ minutes: newTime.minutes, seconds: newTime.seconds });
+        
+        if (distance < 0) {
+          distance = 0;
         }
-        if (counterSeconds === 0) {
-          if (counterMinutes === 0) {
-            if (!onInterval) {
-              setRounds(rounds - 1);
-              setOnInterval(true);
-              if (rounds > 1) {
-                setCounterMinutes(intervalMinutes);
-                setCounterSeconds(intervalSeconds);
-              }
-            } else {
-              setCounterMinutes(breakMinutes);
-              setCounterSeconds(breakSeconds);
-              setOnInterval(false);
-            }
-            clearInterval(myInterval);
-          } else {
-            setCounterMinutes(counterMinutes - 1);
-            setCounterSeconds(59);
-          }
+
+        if (distance === 0) {
+          setCounter({ minutes: 0, seconds: 0 });
+          clearInterval(myInterval);
         }
-      }, 1000);
-      return () => {
-        clearInterval(myInterval);
-      };
+      }, 10);
+    } else if (isPaused && !isRunning) {
+      clearInterval(myInterval);
+      setIsPaused(false);
     }
-  }, [
-    isRunning,
-    counterMinutes,
-    counterSeconds,
-    rounds,
-    breakMinutes,
-    breakSeconds,
-    intervalMinutes,
-    intervalSeconds,
-    onInterval,
-  ]);
+    return () => clearInterval(myInterval);
+  }, [isRunning, isPaused, savedTime]);
 
   return (
     <div>
-      <h2>
-        {onInterval ? 'Interval Time:' : 'Break Time'} {counterMinutes}:
-        {counterSeconds < 10 ? '0' + counterSeconds : counterSeconds}
-      </h2>
-      <Rounds rounds={rounds} />
-      <Counter
-        initialMinutes={time.minutes}
-        initialSeconds={time.seconds}
-        start={isRunning}
-      >
-        Total Time Left:
-      </Counter>
-      {/*        <CounterRAF seconds={totalSeconds} isRunning={isRunning} /> */}
-      {/*       <CounterPT isRunning={isRunning} /> */}
-      {/*       <CounterULE isRunning={isRunning} /> */}
-      {/*       <CounterDT isRunning={isRunning}/> */}
-      <button onClick={startTimer}>Start</button>
+      TotalTime: {counter.minutes}:{counter.seconds}
+      <button onClick={start}>Start</button>
       <br /> <br />
-      <button onClick={pauseTimer}>Pause</button>
+      <button onClick={pause}>Pause</button>
       <br /> <br />
       <button onClick={() => props.history.goBack()}>Go back</button>
     </div>
@@ -115,5 +102,3 @@ const Timer2 = (props) => {
 };
 
 export default Timer2;
-
-

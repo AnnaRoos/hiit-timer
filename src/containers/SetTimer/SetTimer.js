@@ -13,19 +13,20 @@ const SetTimer = (props) => {
 
   const [rounds, setRounds] = useState(1);
 
+  const totalTime = calculateTotalTime(
+    +intervalMinutes + +breakMinutes,
+    +intervalSeconds + +breakSeconds,
+    rounds
+  );
+  console.log(totalTime);
   const data = {
     intervalMinutes: intervalMinutes,
     intervalSeconds: intervalSeconds,
     breakMinutes: breakMinutes,
     breakSeconds: breakSeconds,
     rounds: rounds,
+    totalTime: totalTime,
   };
-
-  const time = calculateTotalTime(
-    +intervalMinutes + +breakMinutes,
-    +intervalSeconds + +breakSeconds,
-    rounds
-  );
 
   return (
     <div>
@@ -67,10 +68,9 @@ const SetTimer = (props) => {
         value={rounds}
         changed={(event) => setRounds(event.target.value)}
       />
-      <ShowTotalTime
-        minutes={time.minutes}
-        seconds={time.seconds}
-      >Total Training Time: </ShowTotalTime>
+      <ShowTotalTime minutes={totalTime.minutes} seconds={totalTime.seconds}>
+        Total Training Time:{' '}
+      </ShowTotalTime>
       <button
         onClick={() => props.history.push({ pathname: '/timer', state: data })}
       >

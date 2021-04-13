@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Rounds from '../../components/Rounds/Rounds';
 import Counter from '../../components/Counter/Counter';
 
-import { calculateTotalTime } from '../../utils/CalculateTotalTime';
 import { calculateSwitchTime } from '../../utils/CalculateSwitchTime';
 
 const Timer = (props) => {
@@ -15,16 +14,12 @@ const Timer = (props) => {
   const breakMinutes = +state.breakMinutes;
   const breakSeconds = +state.breakSeconds;
 
+  const totalTime = state.totalTime;
+  
   const [rounds, setRounds] = useState(state.rounds);
 
-  const totalTime = calculateTotalTime(
-    +intervalMinutes + +breakMinutes,
-    +intervalSeconds + +breakSeconds,
-    rounds
-  );
-
-  const [counterMinutes, setCounterMinutes] = useState(totalTime.minutes);
-  const [counterSeconds, setCounterSeconds] = useState(totalTime.seconds);
+  const [counterMinutes, setCounterMinutes] = useState(+totalTime.minutes);
+  const [counterSeconds, setCounterSeconds] = useState(+totalTime.seconds);
 
   const [isRunning, setIsRunning] = useState(false);
   const [onInterval, setOnInterval] = useState(true);

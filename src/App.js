@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import './App.css';
 
 import SetTimer from './containers/SetTimer/SetTimer';
-import Timer from './containers/Timer/Timer';
+import Timer from './containers/Timer/Timer2';
 
 function App() {
   return (
