@@ -4,6 +4,8 @@ import Input from '../../components/Input/Input';
 import ShowTotalTime from '../../components/ShowTotalTime/ShowTotalTime';
 import StartButton from '../../components/Buttons/StartButton';
 
+import styles from './SetTimer.module.css';
+
 import { calculateTotalTime } from '../../utils/CalculateTotalTime';
 
 const SetTimer = (props) => {
@@ -32,7 +34,8 @@ const SetTimer = (props) => {
 
   return (
     <div>
-      <h2>Interval Time:</h2>
+      <p>Set your training time!</p>
+      <h2 className={styles.headings}>Interval Time</h2>
       <Input
         label="Minutes: "
         id="intervalMinutes"
@@ -47,7 +50,7 @@ const SetTimer = (props) => {
         value={intervalSeconds}
         changed={(event) => setIntervalSeconds(event.target.value)}
       />
-      <h2>Break Time:</h2>
+      <h2 className={styles.headings}>Break Time</h2>
       <Input
         label="Minutes:"
         id="breakMinutes"
@@ -62,7 +65,7 @@ const SetTimer = (props) => {
         value={breakSeconds}
         changed={(event) => setBreakSeconds(event.target.value)}
       />
-      <h2>Rounds:</h2>
+      <h2 className={styles.headings}>Rounds</h2>
       <Input
         label="Number:"
         id="rounds"
@@ -70,7 +73,7 @@ const SetTimer = (props) => {
         value={rounds}
         changed={(event) => setRounds(event.target.value)}
       />
-      <ShowTotalTime minutes={totalTime.minutes} seconds={totalTime.seconds}>
+      <ShowTotalTime hours={totalTime.hours} minutes={totalTime.minutes} seconds={totalTime.seconds}>
         Total Training Time:{' '}
       </ShowTotalTime>
       <StartButton

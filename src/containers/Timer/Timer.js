@@ -9,18 +9,19 @@ const Timer = (props) => {
   const { state } = props.location;
 
   const intervalTimeInMilliseconds = timeToMilliseconds(
-    +state.intervalMinutes,
-    +state.intervalSeconds
+    +state.intervalSeconds,
+    state.intervalMinutes
   );
 
   const breakTimeInMilliseconds = timeToMilliseconds(
-    +state.breakMinutes,
-    +state.breakSeconds
+    +state.breakSeconds,
+    +state.breakMinutes
   );
 
   const totalTimeInMilliseconds = timeToMilliseconds(
+    +state.totalTime.seconds,
     +state.totalTime.minutes,
-    +state.totalTime.seconds
+    +state.totalTime.hours
   );
 
   const [totalCounterInMilliseconds, setTotalCounterInMilliseconds] = useState(
@@ -28,6 +29,7 @@ const Timer = (props) => {
   );
 
   const [totalCounter, setTotalCounter] = useState({
+    hours: +state.totalTime.hours,
     minutes: +state.totalTime.minutes,
     seconds: +state.totalTime.seconds,
   });
@@ -56,7 +58,9 @@ const Timer = (props) => {
         if (totalCounterInMilliseconds > 0) {
           setTotalCounterInMilliseconds(totalCounterInMilliseconds - 1000);
           const newTime = msToTime(totalCounterInMilliseconds);
+          
           setTotalCounter({
+            hours: newTime.hours,
             minutes: newTime.minutes,
             seconds: newTime.seconds,
           });
@@ -90,7 +94,7 @@ const Timer = (props) => {
           }
         }
         if (totalCounterInMilliseconds === 0) {
-          setTotalCounter({ minutes: 0, seconds: 0 });
+          setTotalCounter({ hours: 0, minutes: 0, seconds: 0 });
           setIsFinished(true);
           clearInterval(myInterval);
         }
@@ -121,6 +125,7 @@ const Timer = (props) => {
       <Rounds rounds={rounds} />
       <Counter
         title={'Total Time'}
+        hours={totalCounter.hours}
         minutes={totalCounter.minutes}
         seconds={totalCounter.seconds}
       />

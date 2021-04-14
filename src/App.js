@@ -4,10 +4,12 @@ import { Route, Switch } from 'react-router-dom';
 import SetTimer from './containers/SetTimer/SetTimer';
 import Timer from './containers/Timer/Timer';
 
+import styles from './App.module.css';
+
 function App() {
   return (
     <div >
-      <h1>MY HIIT TIMER</h1>
+      <h1 className={styles.heading}>HIIT TIMER</h1>
       <Switch>
         <Route path="/timer" component={Timer} />
         <Route path="/" exact component={SetTimer} />

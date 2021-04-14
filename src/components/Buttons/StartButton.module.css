@@ -1,8 +1,12 @@
 .startButton {
   width: 9rem;
   height: 9rem;
-  background-color: cyan;
+  background-color: paleturquoise;
   border-radius: 50%;
   font-size: 2rem;
   border: 5px solid black;
+}
+
+.startButton:focus, .startButton:hover {
+  background-color: cyan;
 }
