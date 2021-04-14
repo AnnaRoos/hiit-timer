@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import Input from '../../components/Input/Input';
 import ShowTotalTime from '../../components/ShowTotalTime/ShowTotalTime';
+import StartButton from '../../components/Buttons/StartButton';
+
 import { calculateTotalTime } from '../../utils/CalculateTotalTime';
 
 const SetTimer = (props) => {
@@ -18,7 +20,7 @@ const SetTimer = (props) => {
     +intervalSeconds + +breakSeconds,
     rounds
   );
-  console.log(totalTime);
+
   const data = {
     intervalMinutes: intervalMinutes,
     intervalSeconds: intervalSeconds,
@@ -32,14 +34,14 @@ const SetTimer = (props) => {
     <div>
       <h2>Interval Time:</h2>
       <Input
-        label="Min"
+        label="Minutes: "
         id="intervalMinutes"
         inputType="minutes"
         value={intervalMinutes}
         changed={(event) => setIntervalMinutes(event.target.value)}
       />
       <Input
-        label="Sec"
+        label="Seconds: "
         id="intervalSeconds"
         inputType="seconds"
         value={intervalSeconds}
@@ -47,14 +49,14 @@ const SetTimer = (props) => {
       />
       <h2>Break Time:</h2>
       <Input
-        label="Min"
+        label="Minutes:"
         id="breakMinutes"
         inputType="minutes"
         value={breakMinutes}
         changed={(event) => setBreakMinutes(event.target.value)}
       />
       <Input
-        label="Sec"
+        label="Seconds:"
         id="breakSeconds"
         inputType="seconds"
         value={breakSeconds}
@@ -62,7 +64,7 @@ const SetTimer = (props) => {
       />
       <h2>Rounds:</h2>
       <Input
-        label="No"
+        label="Number:"
         id="rounds"
         inputType="rounds"
         value={rounds}
@@ -71,11 +73,10 @@ const SetTimer = (props) => {
       <ShowTotalTime minutes={totalTime.minutes} seconds={totalTime.seconds}>
         Total Training Time:{' '}
       </ShowTotalTime>
-      <button
-        onClick={() => props.history.push({ pathname: '/timer', state: data })}
-      >
-        START!
-      </button>
+      <StartButton
+        title="START!"
+        clicked={() => props.history.push({ pathname: '/timer', state: data })}
+      />
     </div>
   );
 };

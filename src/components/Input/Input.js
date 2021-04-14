@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './Input.module.css';
 
 const Input = (props) => {
   let inputElement = null;
@@ -6,11 +7,12 @@ const Input = (props) => {
     case 'minutes':
       inputElement = (
         <input
+          className={styles.input}
           type="number"
           id={props.id}
           name="minutes"
           min="0"
-          max="60"
+          max="10"
           onChange={props.changed}
         />
       );
@@ -18,11 +20,12 @@ const Input = (props) => {
     case 'seconds':
       inputElement = (
         <input
+          className={styles.input}
           type="number"
           id={props.id}
           name="seconds"
           min="0"
-          max="60"
+          max="59"
           onChange={props.changed}
         />
       );
@@ -30,6 +33,7 @@ const Input = (props) => {
     case 'rounds':
       inputElement = (
         <input
+          className={styles.input}
           type="number"
           id={props.id}
           name="rounds"
@@ -43,8 +47,8 @@ const Input = (props) => {
       break;
   }
   return (
-    <div>
-      <label>{props.label}</label>
+    <div >
+      <label className={styles.label}>{props.label}</label>
       {inputElement}
     </div>
   );

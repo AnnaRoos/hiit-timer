@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Rounds from '../../components/Rounds/Rounds';
+import { calculateSwitchTime } from '../../utils/CalculateSwitchTime';
 import { msToTime } from '../../utils/MillisecondsToTime';
 import { timeToMilliseconds } from '../../utils/TimeToMilliseconds';
 
@@ -13,7 +14,7 @@ const Timer2 = (props) => {
 
   const breakTimeInMilliseconds = timeToMilliseconds(
     +state.breakMinutes,
-    +state.intervalSeconds
+    +state.breakSeconds
   );
 
   const totalTimeInMilliseconds = timeToMilliseconds(
@@ -25,13 +26,12 @@ const Timer2 = (props) => {
     totalTimeInMilliseconds
   );
 
-  const [intervalMinutes, setIntervalMinues] = useState(+state.intervalMinutes);
-  const [intervalSeconds, setIntervalSeconds] = useState(
-    +state.intervalSeconds
-  );
+  const [intervalsAndBreaks, setIntervalsAndBreaks] = useState({
+    minutes: 0,
+    seconds: 0,
+  });
 
-  const [breakMinutes, setBreakMinutes] = useState(+state.breakMinutes);
-  const [breakSeconds, setBreakSeconds] = useState(+state.breakSeconds);
+  const [switchTime, setSwitchTime] = useState(null);
 
   const totalTime = state.totalTime;
 
@@ -47,8 +47,6 @@ const Timer2 = (props) => {
   const [onInterval, setOnInterval] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
 
-  
- 
 
   const pause = () => {
     setIsRunning(false);
@@ -59,8 +57,8 @@ const Timer2 = (props) => {
     let startTime = Date.now() + timeInMilliseconds;
     setSavedTime(startTime);
     setIsRunning(true);
-  }
-   const [savedTime, setSavedTime] = useState(null);
+  };
+  const [savedTime, setSavedTime] = useState(null);
 
   useEffect(() => {
     let myInterval;
@@ -71,12 +69,17 @@ const Timer2 = (props) => {
         setTimeInMilliseconds(distance);
 
         const newTime = msToTime(distance);
-        setCounter({ minutes: newTime.minutes, seconds: newTime.seconds });
-        
+
+     
+        setCounter({
+          minutes: newTime.minutes,
+          seconds: newTime.seconds,
+        });
+
+
         if (distance < 0) {
           distance = 0;
         }
-
         if (distance === 0) {
           setCounter({ minutes: 0, seconds: 0 });
           clearInterval(myInterval);
@@ -91,7 +94,21 @@ const Timer2 = (props) => {
 
   return (
     <div>
-      TotalTime: {counter.minutes}:{counter.seconds}
+      <h2>
+        Interval Time:{' '}
+        {intervalsAndBreaks.minutes < 10
+          ? '0' + intervalsAndBreaks.minutes
+          : intervalsAndBreaks.minutes}
+        :
+        {intervalsAndBreaks.seconds < 10
+          ? '0' + intervalsAndBreaks.seconds
+          : intervalsAndBreaks.seconds}
+      </h2>
+      <h2>
+        Total Time:{' '}
+        {counter.minutes < 10 ? '0' + counter.minutes : counter.minutes}:
+        {counter.seconds < 10 ? '0' + counter.seconds : counter.seconds}
+      </h2>
       <button onClick={start}>Start</button>
       <br /> <br />
       <button onClick={pause}>Pause</button>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Rounds = props => (
-  <h2>Rounds: {props.rounds}</h2>
+  <div>Rounds: {props.rounds}</div>
 );
 
 export default Rounds;
