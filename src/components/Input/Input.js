@@ -48,7 +48,7 @@ const Input = (props) => {
   }
   return (
     <div >
-      <label className={styles.label}>{props.label}</label>
+      <label className={styles.label} htmlFor={props.id}>{props.label}</label>
       {inputElement}
     </div>
   );

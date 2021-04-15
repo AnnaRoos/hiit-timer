@@ -34,47 +34,66 @@ const SetTimer = (props) => {
 
   return (
     <div>
-      <p>Set your training time!</p>
-      <h2 className={styles.headings}>Interval Time</h2>
-      <Input
-        label="Minutes: "
-        id="intervalMinutes"
-        inputType="minutes"
-        value={intervalMinutes}
-        changed={(event) => setIntervalMinutes(event.target.value)}
-      />
-      <Input
-        label="Seconds: "
-        id="intervalSeconds"
-        inputType="seconds"
-        value={intervalSeconds}
-        changed={(event) => setIntervalSeconds(event.target.value)}
-      />
-      <h2 className={styles.headings}>Break Time</h2>
-      <Input
-        label="Minutes:"
-        id="breakMinutes"
-        inputType="minutes"
-        value={breakMinutes}
-        changed={(event) => setBreakMinutes(event.target.value)}
-      />
-      <Input
-        label="Seconds:"
-        id="breakSeconds"
-        inputType="seconds"
-        value={breakSeconds}
-        changed={(event) => setBreakSeconds(event.target.value)}
-      />
-      <h2 className={styles.headings}>Rounds</h2>
-      <Input
-        label="Number:"
-        id="rounds"
-        inputType="rounds"
-        value={rounds}
-        changed={(event) => setRounds(event.target.value)}
-      />
-      <ShowTotalTime hours={totalTime.hours} minutes={totalTime.minutes} seconds={totalTime.seconds}>
-        Total Training Time:{' '}
+      <section className={styles.intervalSection}>
+        <p className={styles.setTrainingTime}>Set your training time!</p>
+        <h2 className={styles.headings}>Interval Time</h2>
+        <div className={styles.flexRow}>
+          <Input
+            className={styles.input}
+            label="Minutes: "
+            id="intervalMinutes"
+            inputType="minutes"
+            value={intervalMinutes}
+            changed={(event) => setIntervalMinutes(event.target.value)}
+          />
+          <Input
+            className={styles.input}
+            label="Seconds: "
+            id="intervalSeconds"
+            inputType="seconds"
+            value={intervalSeconds}
+            changed={(event) => setIntervalSeconds(event.target.value)}
+          />
+        </div>
+      </section>
+
+      <section className={styles.breakSection}>
+        <h2 className={styles.headings}>Break Time</h2>
+        <div className={styles.flexRow}>
+          <Input
+            label="Minutes:"
+            id="breakMinutes"
+            inputType="minutes"
+            value={breakMinutes}
+            changed={(event) => setBreakMinutes(event.target.value)}
+          />
+          <Input
+            label="Seconds:"
+            id="breakSeconds"
+            inputType="seconds"
+            value={breakSeconds}
+            changed={(event) => setBreakSeconds(event.target.value)}
+          />
+        </div>
+      </section>
+
+      <section className={styles.roundsSection}>
+        <h2 className={styles.headings}>Rounds</h2>
+        <Input
+          label="Number:"
+          id="rounds"
+          inputType="rounds"
+          value={rounds}
+          changed={(event) => setRounds(event.target.value)}
+        />
+      </section>
+
+      <ShowTotalTime
+        hours={totalTime.hours}
+        minutes={totalTime.minutes}
+        seconds={totalTime.seconds}
+      >
+        Total Training Time
       </ShowTotalTime>
       <StartButton
         title="START!"
