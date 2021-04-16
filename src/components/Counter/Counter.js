@@ -9,7 +9,7 @@ const Counter = (props) => {
 
   return (
     <div>
-      {props.title}: {hours}
+      {props.title ? props.title + ':' : null} {hours}
       {props.minutes < 10 ? '0' + props.minutes + ':' : props.minutes + ':'}
       {props.seconds < 10 ? '0' + props.seconds : props.seconds}
     </div>

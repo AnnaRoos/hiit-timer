@@ -96,7 +96,7 @@ const SetTimer = (props) => {
         Total Training Time
       </ShowTotalTime>
       <StartButton
-        title="START!"
+        title="GO!"
         clicked={() => props.history.push({ pathname: '/timer', state: data })}
       />
     </div>

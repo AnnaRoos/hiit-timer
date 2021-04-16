@@ -1,0 +1,25 @@
+.timerButton {
+  width: 5rem;
+  height: 5rem;
+  background-color: paleturquoise;
+  border-radius: 50%;
+  font-size: 1rem;
+  border: 5px solid black;
+  font-weight: bold;
+}
+
+.timerButton:focus, .timerButton:hover {
+  background-color: paleturquoise;
+}
+
+.green {
+  background-color: rgb(142, 243, 209);
+}
+
+.yellow {
+  background-color: palegoldenrod;
+}
+
+.pink {
+  background-color: rgb(235, 164, 188);
+}
