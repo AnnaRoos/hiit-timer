@@ -33,7 +33,7 @@ const SetTimer = (props) => {
   };
 
   return (
-    <div>
+    <main>
       <section className={styles.intervalSection}>
         <p className={styles.setTrainingTime}>Set your training time!</p>
         <h2 className={styles.headings}>Interval Time</h2>
@@ -99,7 +99,7 @@ const SetTimer = (props) => {
         title="GO!"
         clicked={() => props.history.push({ pathname: '/timer', state: data })}
       />
-    </div>
+    </main>
   );
 };
 

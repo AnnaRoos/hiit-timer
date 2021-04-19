@@ -1,11 +1,11 @@
 .headings {
   font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin: 0.5rem 0 0.5rem 0;
 }
 
 .intervalSection {
   width: 100vw;
-  height: 25vh;
+  height: 21vh;
   background-color: rgb(235, 164, 188);
   display: flex;
   flex-direction: column;
@@ -13,7 +13,7 @@
 
 .breakSection {
   width: 100vw;
-  height: 18vh;
+  height: 14vh;
   background-color: palegoldenrod;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@
 
 .roundsSection {
     width: 100vw;
-  height: 18vh;
+  height: 14vh;
   background-color: lightcyan;
   display: flex;
   flex-direction: column;
@@ -35,5 +35,5 @@ justify-content: center;
 
 .setTrainingTime {
   font-size: 1.5rem;
-  margin-bottom: 0.2rem;
+  margin: 0.5rem 0 0.5rem 0;
 }

@@ -8,13 +8,15 @@ import styles from './App.module.css';
 
 function App() {
   return (
-    <div >
-      <h1 className={styles.heading}>HIIT TIMER</h1>
+    <>
+      <header>
+        <h1 className={styles.heading}>HIIT TIMER</h1>
+      </header>
       <Switch>
         <Route path="/timer" component={Timer} />
         <Route path="/" exact component={SetTimer} />
       </Switch>
-    </div>
+    </>
   );
 }
 

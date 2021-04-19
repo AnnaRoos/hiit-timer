@@ -7,6 +7,10 @@ import GoBackButton from '../../components/Buttons/GoBackButton';
 
 import styles from './Timer.module.css';
 
+import beep1 from '../../assets/beep1.mp3';
+import beep2 from '../../assets/beep2.mp3';
+import fanfare from '../../assets/fanfare1.mp3';
+
 import { msToTime } from '../../utils/MillisecondsToTime';
 import { timeToMilliseconds } from '../../utils/TimeToMilliseconds';
 
@@ -56,6 +60,8 @@ const Timer = (props) => {
   const [onInterval, setOnInterval] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
 
+
+
   const reset = () => {
     setIsFinished(false);
     setSmallCounter({
@@ -75,6 +81,9 @@ const Timer = (props) => {
 
   useEffect(() => {
     let myInterval;
+    const countdownBeep = new Audio(beep1);
+    const switchBeep = new Audio(beep2);
+    const endBeep = new Audio(fanfare);
     if (isRunning && rounds > 0) {
       myInterval = setInterval(() => {
         if (totalCounterInMilliseconds > 0) {
@@ -88,6 +97,13 @@ const Timer = (props) => {
           });
         }
 
+        if (
+          smallCounterInMilliseconds < 4000 &&
+          smallCounterInMilliseconds > 0
+        ) {
+          countdownBeep.play();
+        }
+
         if (smallCounterInMilliseconds > 0) {
           setSmallCounterInMilliseconds(smallCounterInMilliseconds - 1000);
           const newIntervalAndBreakTime = msToTime(smallCounterInMilliseconds);
@@ -96,6 +112,7 @@ const Timer = (props) => {
             seconds: newIntervalAndBreakTime.seconds,
           });
         } else {
+          switchBeep.play();
           if (onInterval) {
             setSmallCounterInMilliseconds(breakTimeInMilliseconds - 1000);
             const newBreakTime = msToTime(breakTimeInMilliseconds);
@@ -116,6 +133,7 @@ const Timer = (props) => {
           }
         }
         if (totalCounterInMilliseconds === 0) {
+          endBeep.play();
           setTotalCounter({ hours: 0, minutes: 0, seconds: 0 });
           setSmallCounter({ minutes: 0, seconds: 0 });
           setIsFinished(true);
@@ -135,7 +153,7 @@ const Timer = (props) => {
   ]);
 
   return (
-    <div className={styles.timer}>
+    <main className={styles.timer}>
       <ProgressBar
         title={onInterval ? 'Interval Time:' : 'Break Time:'}
         time={smallCounter}
@@ -171,7 +189,7 @@ const Timer = (props) => {
         <TimerButton title="RESET" clicked={reset} color="pink" />
       </div>
       <GoBackButton title="GO BACK" clicked={() => props.history.goBack()} />
-    </div>
+    </main>
   );
 };
 
