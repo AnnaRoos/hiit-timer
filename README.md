@@ -1,10 +1,10 @@
 **A HYPER ISLAND school project**
 
-Program: Front end development
+Program: Frontend developer
 
 Course: The first app
 
-Task: The task was to build a timer app using React. I choose to make a HIIT Timer (hi-intensity interval training) where you can set your own training time and break time and number of rounds. 
+Task: To build a timer app using React. I choose to make a HIIT Timer (hi-intensity interval training) where you can set your own training time and break time and number of rounds. 
 
 **The timer logic**
 
