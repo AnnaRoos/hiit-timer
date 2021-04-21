@@ -12,7 +12,7 @@ I experimented with a lot of different ways of creating timers, using setInterva
 
 **The layout**
 
-To show the time passing I built a progress bar circle using svg animations that also changes colour depending on how much time left on each Interval/Break.
+I styled the app using CSS Modules and a mobile first approach. To show the time passing I built a progress bar circle using svg animations that also changes colour depending on how much time left on each Interval/Break.
 
 **Accessibility**
 
