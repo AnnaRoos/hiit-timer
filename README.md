@@ -1,4 +1,6 @@
-# A HYPER ISLAND school project
+# HIIT Timer
+
+A HYPER ISLAND school project
 
 Program: Frontend developer
 
