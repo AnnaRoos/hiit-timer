@@ -14,7 +14,7 @@ React, CSS modules, SVG animations.
 
 **The timer logic**
 
-I experimented with a lot of different ways of creating timers, using setInterval, Date.now and requestAnimationFrame. My biggest challenge was to have two timers running simultaneuosly, within the same time counter, plus doing the switches back and forth from Interval Time to Break Time whilst not getting out of sync with the timer counting the Total Time. I choose to use setInterval only, inside a useEffect hook, and counting milliseconds.
+I experimented with a lot of different ways of creating timers, using setInterval, Date.now and requestAnimationFrame. My biggest challenge was to have two timers running simultaneuosly, plus doing the switches back and forth from Interval Time to Break Time. I choose to use setInterval, inside a useEffect hook, and counting milliseconds. The Date object is more accurate, but using it made the switches more complicated if I wanted to avoid the timers running simultaneuosly to get out of sync. 
 
 **The layout**
 
