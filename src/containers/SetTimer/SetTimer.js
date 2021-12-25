@@ -6,7 +6,7 @@ import StartButton from '../../components/Buttons/StartButton';
 
 import styles from './SetTimer.module.css';
 
-import { calculateTotalTime } from '../../utils/CalculateTotalTime';
+import { calculateTotalTime } from '../../utils/calculateTotalTime';
 
 const SetTimer = (props) => {
   const [intervalMinutes, setIntervalMinutes] = useState(0);

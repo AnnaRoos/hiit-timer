@@ -11,8 +11,8 @@ import beep1 from '../../assets/beep1.mp3';
 import beep2 from '../../assets/beep2.mp3';
 import fanfare from '../../assets/fanfare1.mp3';
 
-import { msToTime } from '../../utils/MillisecondsToTime';
-import { timeToMilliseconds } from '../../utils/TimeToMilliseconds';
+import { msToTime } from '../../utils/msToTime';
+import { timeToMilliseconds } from '../../utils/timeToMilliseconds';
 
 const Timer = (props) => {
   const { state } = props.location;
@@ -59,8 +59,6 @@ const Timer = (props) => {
   const [isRunning, setIsRunning] = useState(false);
   const [onInterval, setOnInterval] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
-
-
 
   const reset = () => {
     setIsFinished(false);
