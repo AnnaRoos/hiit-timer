@@ -18,11 +18,11 @@ I experimented with a lot of different ways of creating timers, using setInterva
 
 **The layout**
 
-I styled the app using a mobile first approach. To show the time passing I built a progress bar circle using SVG animations that also changes colour depending on how much time left on each Interval/Break.
+I did not focus on the styling of this app. I used a mobile first approach and just added some minimal styles. Except for the progress bar circle. I used SVG animations to show the time passing. It also changes colour depending on how much time there is left on each Interval/Break.
 
 **Accessibility**
 
-I used a high colour contrast between text and background colours and all the input fields and buttons are tabbable, outlined and can be interacted with using only keyboard. I audited my app in Lighthouse and Axe to make sure I followed best practice. I used semantic HTML.
+One of the requirements of this brief was accessibility, so I used a high colour contrast between text and background colours and all the input fields and buttons are tabbable, outlined and can be interacted with using only keyboard. I audited my app in Lighthouse and Axe to make sure I followed best practice. I used semantic HTML.
 
 **Sound**
 
